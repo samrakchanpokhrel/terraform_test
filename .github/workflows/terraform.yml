@@ -1,0 +1,86 @@
+name: terraform deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy_dev:
+    name: "Terraform Deployment"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  
+
+
+      # - name: Setup Terraform
+      #   uses: hashicorp/terraform-github-actions@master
+      #   with:
+      #       tf_actions_version: 1.2.0
+      #       tf_actions_subcommand: "fmt"
+      #       tf_actions_working_dir: "./environment/dev"
+      #       tf_actions_comment: true
+      #   env:
+      #     github_token: ${{ secrets.TERRAFORM_TOKEN }}
+           
+      - name: Terraform init dev
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 1.2.0
+          tf_actions_subcommand: "init"
+          tf_actions_working_dir: "./environment/dev"
+          tf_actions_comment: true
+        env:
+          github_token: ${{ secrets.TERRAFORM_TOKEN }}
+          TF_VAR_agent_client_id: ${{ secrets.ARM_CLIENT_ID }}
+          TF_VAR_agent_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+          TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          TF_VAR_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+          
+
+      - name: Terraform plan dev
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 1.2.0
+          tf_actions_subcommand: "plan"
+          tf_actions_working_dir: "./environment/dev"
+          tf_actions_comment: true
+        env:
+          github_token: ${{ secrets.TERRAFORM_TOKEN }}
+          TF_VAR_agent_client_id: ${{ secrets.ARM_CLIENT_ID }}
+          TF_VAR_agent_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+          TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          TF_VAR_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+          
+          
+        
+
+      - name: Terraform apply dev
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 1.2.0
+          tf_actions_subcommand: "apply"
+          tf_actions_working_dir: "./environment/dev"
+          tf_actions_comment: true
+        env:
+          github_token: ${{ secrets.TERRAFORM_TOKEN }}
+          TF_VAR_agent_client_id: ${{ secrets.ARM_CLIENT_ID }}
+          TF_VAR_agent_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+          TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          TF_VAR_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+        
+      
+      
+           
+           
+         
+        
+          
+
