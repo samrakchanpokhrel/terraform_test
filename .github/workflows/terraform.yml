@@ -291,10 +291,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Install Azure CLI
-      uses: azure/CLI@v1
-      with:
-        azcliversion: 2.32.0  # Specify the desired Azure CLI version
+    # - name: Install Azure CLI
+    #   uses: azure/CLI@v1
+    #   with:
+    #     azcliversion: 2.32.0  # Specify the desired Azure CLI version
 
     - name: Log in to Azure
       run: |
