@@ -35,19 +35,19 @@ variable "function_app" {
   
 }
 
-variable "agent_client_id" {
+# variable "agent_client_id" {
 
   
-}
+# }
 
-variable "agent_client_secret" {
+# variable "agent_client_secret" {
   
-}
+# }
 
-variable "subscription_id" {
+# variable "subscription_id" {
   
-}
+# }
 
-variable "tenant_id" {
+# variable "tenant_id" {
   
-}
+# }
