@@ -42,7 +42,7 @@ jobs:
       - name: Terraform apply
         working-directory: ./environment/dev
         run: |
-          terraform apply -auto-approve
+          terraform apply 
           
   
       
