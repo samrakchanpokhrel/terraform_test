@@ -1,0 +1,61 @@
+# name: Terraform Azure Deployment
+
+# on:
+#   push:
+#     branches:
+#       - master
+#   pull_request:
+
+# permissions:
+#   contents: read
+
+# jobs:
+#   terraform:
+#     name: 'Terraform'
+#     runs-on: ubuntu-latest
+#     environment: production
+
+#     # Use the Bash shell regardless of the GitHub Actions runner OS
+#     defaults:
+#       run:
+#         shell: bash
+
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v3
+
+
+#     - name: Log in to Azure
+#       run: |
+#         az login --service-principal -u ${{ secrets.ARM_CLIENT_ID }} -p ${{ secrets.ARM_CLIENT_SECRET }} --tenant ${{ secrets.ARM_TENANT_ID }}
+#         az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+
+#     - name: Get Storage Account Key
+#       id: get_storage_key
+#       run: |
+#         key=$(az storage account keys list --resource-group "terraform-storage" --account-name "terraformstatetestsam" --query "[0].value" --output tsv)
+#         echo "::set-output name=storage_key::$key"
+
+
+#     - name: Setup Terraform
+#       uses: hashicorp/setup-terraform@v1
+#       with:
+#         terraform_version: 1.7.0
+
+#     - name: Terraform Init
+#       working-directory: ./environment/dev
+#       run: |
+#         terraform init -backend-config="storage_account_name=terraformstatetestsam" -backend-config="container_name=statefile" -backend-config="access_key=${{ steps.get_storage_key.outputs.storage_key }}" -reconfigure
+
+
+#     - name: Terraform Plan
+#       working-directory: ./environment/dev
+#       run: |
+#         terraform plan -out=tfplan -input=false
+
+#     - name: Terraform Apply
+#       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+#       working-directory: ./environment/dev
+#       run: |
+#         terraform apply -auto-approve 
